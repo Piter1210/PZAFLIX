@@ -1,0 +1,23 @@
+/* Series.css */
+
+.series-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centra el contenido horizontalmente */
+  }
+  
+  .series-gallery img {
+    width: calc(7% - 10px); /* Ancho del 15% del contenedor con espacio entre columnas */
+    height: auto;
+    margin-bottom: 200px; /* Ajustar el margen inferior para subir el contenido */
+    margin-left: 50px; /* Agregar margen a la izquierda del contenido */
+    margin-right: 50px;
+    box-sizing: border-box; /* Incluir bordes en el cálculo del ancho */
+  }
+  
+  @media (max-width: 758px) {
+    .series-gallery img {
+      width: calc(50% - 10px);
+    }
+  }
+  
