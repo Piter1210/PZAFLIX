@@ -16,7 +16,7 @@ function Inicio() {
         <div className="movie-card">
           <Link to="/peliculas">
             <div className="image-container">
-              <img src='./assets/placeholder.png' alt="MOVIES" />
+              <img src='public/assets/placeholder.png' alt="MOVIES" />
               <p>Popular Movies</p>
             </div>
           </Link>

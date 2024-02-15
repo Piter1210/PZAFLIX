@@ -1,31 +1,73 @@
-import React from 'react';
-import '../css/Series.css'; // Asegúrate de importar tu archivo CSS de estilos
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import '../css/Series.css';
 
 function Series() {
+  const [series, setSeries] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedSerie, setSelectedSerie] = useState(null);
+  const [filterYear, setFilterYear] = useState(''); // Estado para el filtro por año
+  const seriesPerPage = 30;
+
+  useEffect(() => {
+    fetch('/sample.json') 
+      .then(response => response.json())
+      .then(data => {
+        const seriesData = data.entries.filter(entry => entry.programType === "series");
+        setSeries(seriesData);
+      });
+  }, []);
+
+  const indexOfLastSerie = currentPage * seriesPerPage;
+  const indexOfFirstSerie = indexOfLastSerie - seriesPerPage;
+
+  // Aplica el filtro por año antes de paginar las series
+  const filteredSeries = series.filter(serie => {
+    if (!filterYear) return true; // Si no hay filtro de año, muestra todas las series
+    return serie.releaseYear === parseInt(filterYear); // Parsea el año como entero antes de comparar
+  });
+
+  const currentSeries = filteredSeries.slice(indexOfFirstSerie, indexOfLastSerie);
+
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+
+  const handleYearFilterChange = event => {
+    setFilterYear(event.target.value); // Actualiza el estado del filtro de año
+  };
+
   return (
-    <div>
-      <div className="series-gallery">
-        <img src="./assets/series1.jpg" alt="Serie 1" />
-        <img src="./assets/series2.jpg" alt="Serie 2" />
-        <img src="./assets/series3.jpg" alt="Serie 3" />
-        <img src="./assets/series4.jpg" alt="Serie 4" />
-        <img src="./assets/series5.jpg" alt="Serie 5" />
-        <img src="./assets/series6.jpg" alt="Serie 6" />
-        <img src="./assets/series7.jpg" alt="Serie 7" />
-        <img src="./assets/series8.jpg" alt="Serie 8" />
-        <img src="./assets/series9.jpg" alt="Serie 9" />
-        <img src="./assets/series10.jpg" alt="Serie 10" />
-        <img src="./assets/series11.jpg" alt="Serie 11" />
-        <img src="./assets/series12.jpg" alt="Serie 12" />
-        <img src="./assets/series13.jpg" alt="Serie 13" />
-        <img src="./assets/series14.jpg" alt="Serie 14" />
-        <img src="./assets/series15.jpg" alt="Serie 15" />
-        <img src="./assets/series16.jpg" alt="Serie 16" />
-        <img src="./assets/series17.jpg" alt="Serie 17" />
-        <img src="./assets/series18.jpg" alt="Serie 18" />
-        <img src="./assets/series19.jpg" alt="Serie 19" />
-        <img src="./assets/series20.jpg" alt="Serie 20" />
-        <img src="./assets/series20.jpg" alt="Serie 21" />
+    <div className="App">
+      {/* Input para filtrar por año */}
+      <input
+        className="filter-year-input"
+        type="text"
+        value={filterYear}
+        onChange={handleYearFilterChange}
+        placeholder="Filtrar por año de lanzamiento"
+      />
+
+      <div className="series-list">
+        {currentSeries.map(serie => (
+          <div key={serie.title} className="serie-item" onClick={() => setSelectedSerie(serie)}>
+            <img 
+              src={serie.images['Poster Art'].url} 
+              alt={serie.title} 
+              className="serie-image"
+            />
+            <div className="serie-info">
+              <Link to={`/serie/${encodeURIComponent(serie.title)}`} className="serie-title">
+                {serie.title}
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="pagination">
+        {[...Array(Math.ceil(filteredSeries.length / seriesPerPage)).keys()].map(number => (
+          <button key={number + 1} onClick={() => paginate(number + 1)}>
+            {number + 1}
+          </button>
+        ))}
       </div>
     </div>
   );

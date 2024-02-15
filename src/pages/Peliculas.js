@@ -1,31 +1,73 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../css/Peliculas.css';
 
-function Peliculas () {
+function Peliculas() {
+  const [movies, setMovies] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [filterYear, setFilterYear] = useState(''); // Estado para el filtro por año
+  const moviesPerPage = 30;
+
+  useEffect(() => {
+    fetch('/sample.json') 
+      .then(response => response.json())
+      .then(data => {
+        const moviesData = data.entries.filter(entry => entry.programType === "movie");
+        setMovies(moviesData);
+      });
+  }, []);
+
+  const indexOfLastMovie = currentPage * moviesPerPage;
+  const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
+
+  // Aplica el filtro por año antes de paginar las películas
+  const filteredMovies = movies.filter(movie => {
+    if (!filterYear) return true; // Si no hay filtro de año, muestra todas las películas
+    return movie.releaseYear === parseInt(filterYear); // Parsea el año como entero antes de comparar
+  });
+
+  const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
+
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+
+  const handleYearFilterChange = event => {
+    setFilterYear(event.target.value); // Actualiza el estado del filtro de año
+  };
+
   return (
-    <div>
-      <div className="movie-gallery">
-        <img src="./assets/Movies/descarga.jpg" alt="Movie 1" />
-        <img src="./assets/movie2.jpg" alt="Movie 2" />
-        <img src="./assets/movie3.jpg" alt="Movie 3" />
-        <img src="./assets/movie4.jpg" alt="Movie 4" />
-        <img src="./assets/movie5.jpg" alt="Movie 5" />
-        <img src="./assets/movie6.jpg" alt="Movie 6" />
-        <img src="./assets/movie7.jpg" alt="Movie 7" />
-        <img src="./assets/movie8.jpg" alt="Movie 8" />
-        <img src="./assets/movie9.jpg" alt="Movie 9" />
-        <img src="./assets/movie10.jpg" alt="Movie 10" />
-        <img src="./assets/movie11.jpg" alt="Movie 11" />
-        <img src="./assets/movie12.jpg" alt="Movie 12" />
-        <img src="./assets/movie13.jpg" alt="Movie 13" />
-        <img src="./assets/movie14.jpg" alt="Movie 14" />
-        <img src="./assets/movie15.jpg" alt="Movie 15" />
-        <img src="./assets/movie16.jpg" alt="Movie 16" />
-        <img src="./assets/movie17.jpg" alt="Movie 17" />
-        <img src="./assets/movie18.jpg" alt="Movie 18" />
-        <img src="./assets/movie19.jpg" alt="Movie 19" />
-        <img src="./assets/movie20.jpg" alt="Movie 20" />
-        <img src="./assets/movie21.jpg" alt="Movie 21" />
+    <div className="App">
+      {/* Input para filtrar por año */}
+      <input
+       className="filter-year-input" 
+        type="text"
+        value={filterYear}
+        onChange={handleYearFilterChange}
+        placeholder="Filtrar por año de lanzamiento"
+      />
+
+      <div className="movie-list">
+        {currentMovies.map(movie => (
+          <div key={movie.title} className="movie-item" onClick={() => setSelectedMovie(movie)}>
+            <img 
+              src={movie.images['Poster Art'].url} 
+              alt={movie.title} 
+              className="movie-image"
+            />
+            <div className="movie-info">
+              <Link to={`/pelicula/${encodeURIComponent(movie.title)}`} className="movie-title">
+                {movie.title}
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="pagination">
+        {[...Array(Math.ceil(filteredMovies.length / moviesPerPage)).keys()].map(number => (
+          <button key={number + 1} onClick={() => paginate(number + 1)}>
+            {number + 1}
+          </button>
+        ))}
       </div>
     </div>
   );

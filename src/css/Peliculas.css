@@ -1,23 +1,108 @@
-/* Peliculas.css */
 
-.movie-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Centra el contenido horizontalmente */
-  }
+.movie-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 20px;
+  justify-items: center;
+}
+
+.movie-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.movie-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.movie-info {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.pagination {
+  margin-top: 20px;
+   display: flex;
+  justify-content: center;
   
-  .movie-gallery img {
-    width: calc(7% - 10px); /* Ancho del 7% del contenedor con espacio entre columnas */
-    height: auto;
-    margin-bottom: 200px; /* Ajustar el margen inferior para subir el contenido */
-    margin-left: 50px; /* Agregar margen a la izquierda del contenido */
-    margin-right: 50px;
-    box-sizing: border-box; /* Incluir bordes en el cálculo del ancho */
-  }
+}
+
+.pagination button {
+  padding: 5px 10px;
+  margin:  5px;
+  border: 2px solid #180e0e;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #e0e0e0;
   
-  @media (max-width: 758px) {
-    .movie-gallery img {
-      width: calc(50% - 10px);
-    }
-  }
-  
+}
+.movie-item {
+  cursor: pointer;
+  transition: opacity 0.3s, border-color 0.3s;
+}
+
+.movie-item:hover {
+  opacity: 0.7;
+  border: 2px solid white;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+  text-align: center;
+}
+
+.popup-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.popup-content .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.filter-year-input {
+  padding: 7px; /* Ajusta el padding del input */
+  margin-bottom: 15px; /* Espacio entre el input y la lista de películas */
+  border-radius: 10px; /* Bordes redondeados */
+  width: calc(50% ); /* Ancho del input menos el padding */
+  box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
+
+  /* Centra horizontalmente el texto dentro del input */
+  text-align: center;
+
+  display: block; /* Para asegurar que ocupe todo el ancho disponible */
+  margin: 10px auto; /* Centra horizontalmente el botón */
+  padding: 7px 10px; /* Ajusta el padding del botón */
+  border: 1px solid #141313; /* Borde gris */
+  border-radius: 10px; /* Bordes redondeados */
+  background-color: #c4a5c2; /* Color de fondo del botón */
+  color: #1d1b1b; /* Color del texto del botón */
+  font-size: 12px; /* Tamaño de fuente */
+}
+
+
+
